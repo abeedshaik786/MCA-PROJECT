@@ -1,10 +1,10 @@
 {% extends 'companybase.html' %}
 {% block content %}
 {% load static %}
-<div class="container">
+<div class="container card mt-5">
     {% if obj %}
-<section>
-  <div class="container card col-sm-12 m-5">
+<section class="m-4">
+  <div class="container card col-sm mr-5">
     <div class="row">
       <div class="col-sm-1">
         <img src="{% static 'rigth.png' %}" width="30" id="img-companys" > 
@@ -20,27 +20,31 @@
     <form action="{% url 'jobkarleapp:job_postview' %}" method="POST">
         {% csrf_token %}
         <input type="hidden" name="user_id" value="{{user.id}}">
-    <h3 class="m-2"><strong>JOB PORTEL</strong></h3>
+    <div class="card col-sm-2 mt-2" style="background-color: yellow;">        
+      <strong><div class="row"><mark  style="background-color: black; color:white; text-align:center;">POST</mark><mark style="background-color: yellow; color:black;">VACANCY</mark></div></<strong>
+  </div>
     <div class="row">
         <div class="col-sm-5 m-2">
+          <label for="cars">Company Name</label>
             <input type="text" class="form-control" name="companyname" placeholder="CompanyName">
 
         </div>
         <div class="col-sm-5 m-2">
-            <input type="text" class="form-control" name="skills" placeholder="Role"
+          <label for="cars">Designation</label>
+            <input type="text" class="form-control" name="skills" placeholder="Role">
         </div>
     </div>
     <div class="m-2">
-        <div class="form-group shadow-textarea">
-            <label for="exampleFormControlTextarea6">Shadow and placeholder</label>
-            <textarea class="form-control z-depth-1" name = "Company_description" id="exampleFormControlTextarea6" rows="3" placeholder="Write something here..."></textarea>
+        <div class="form-group shadow-textarea col-sm-12">
+            <label for="exampleFormControlTextarea6">Company Description</label>
+            <textarea class=" form-control z-depth-1" name = "Company_description" id="exampleFormControlTextarea6" rows="3" placeholder="Write something here..."></textarea>
           </div>
     </div>
     <div class="row">
         <div class="col-sm-5 m-2">
             <label for="cars">Choose a Minimum Experience:</label>
 
-            <select id="min_exp" name="min_experience">
+            <select id="min_exp" class="form-control" name="min_experience">
               <option value="0">0</option>
               <option value="1">1</option>
               <option value="2">2</option>
@@ -54,7 +58,7 @@
         <div class="col-sm-5 m-2">
             <label for="cars">Choose a Maximum Experience:</label>
 
-            <select id="max_exp control-form" name="max_experience">
+            <select id="max_exp"  class="form-control" name="max_experience">
             
               <option value="0">0</option>
               <option value="1">1</option>
@@ -69,9 +73,9 @@
     </div>
     <div class="row">
         <div class="col-sm-5 m-2">
-            <label for="cars">Choose a Maximum Experience:</label>
+            <label for="cars">Choose a Minimum Experience:</label>
 
-            <select id="min_salary " name="min_salary">
+            <select id="min_salary" class="form-control"name="min_salary">
               <option value="0">0</option>
               <option value="1,00,000">1</option>
               <option value="2,00,000">2</option>
@@ -85,7 +89,7 @@
         <div class="col-sm-5 m-2">
             <label for="cars">Choose a Maximum Experience:</label>
 
-            <select id="max_salary " name="max_salary">
+            <select id="max_salary " class="form-control" name="max_salary">
               <option value="0">0</option>
               <option value="1,00,000">1</option>
               <option value="2,00,000">2</option>
@@ -97,30 +101,38 @@
             </select>
         </div>
     </div>
-    <div class="m-2">
-        <div class="form-group shadow-textarea">
-            <label for="exampleFormControlTextarea6">Shadow and placeholder</label>
-            <textarea class="form-control z-depth-1" name="roledescription" id="exampleFormControlTextarea6" rows="3" placeholder="Write something here..."></textarea>
-          </div>
+
+    <div class="form-group shadow-textarea col-sm-12">
+      <label for="exampleFormControlTextarea6">Roles and Responsibilities</label>
+      <textarea class="form-control z-depth-1 form-control" name="roledescription" id="exampleFormControlTextarea6" rows="3" placeholder="Write something here..."></textarea>
     </div>
     <div class="row">
         <div class="col-sm-5 m-2">
+          <label for="cars">First Hr Name</label>
             <input type="text"  class="form-control" name="firsthrname" placeholder="First HrName">
         </div>
         <div class="col-sm-5 m-2">
-            <input type="number"  class="" name="firsthrnumber" placeholder="First HrNumber">        </div>
+          <label for="cars">First Hr Number</label>
+            <input type="number"  class="form-control" name="firsthrnumber" placeholder="First HrNumber">        </div>
     </div>
     <div class="row">
-        <div class="col-sm-5 m-2"><input type="text"  class="form-control" name="secondhrname" placeholder="Second HrName">}</div>
-        <div class="col-sm-5 m-2"><input type="number"  class="form-control" name="secondhrnumber" placeholder="Second HrNumber"></div>
+      
+        <div class="col-sm-5 m-2">
+          <label for="cars">Second Hr Name</label>
+          <input type="text"  class="form-control" name="secondhrname" placeholder="Second HrName"></div>
+        <div class="col-sm-5 m-2">
+          <label for="cars">Second Hr Number</label>
+          <input type="number"  class="form-control" name="secondhrnumber" placeholder="Second HrNumber"></div>
     </div>
     <div class="m-2">
+      <label for="cars">Interview Date</label>
         <input type="text"  class="form-control" name="interviewdate" placeholder="Interview Date">
     </div>
     <div class="m-2">
+      <label for="cars">Interview Location</label>
         <input type="text"  class="form-control" name="interviewlocation" placeholder="Interview Location">
     </div>
-    <input type="submit" class="m-2" value="POST COMPANY REQUIRMENTS">
+    <input type="submit" class="p-2 card" style="margin-left:400px; margin-bottom:5px; background-color:#3c98ed;" value="POST COMPANY REQUIREMENTS">
 </form> 
 </div>
 <script>

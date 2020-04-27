@@ -10,7 +10,6 @@ from django.core import serializers
 from django.http import JsonResponse
 import json
 import datetime
-from .filters import snippetFilter
 from django.views.generic import ListView,DetailView
 from django.db.models import Q
 import sys
