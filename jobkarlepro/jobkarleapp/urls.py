@@ -27,4 +27,5 @@ urlpatterns = [
     path(r'Applied_Candidates/(?P<idd>.*)',views.Applied_Candidates,name='Applied_Candidates'),
     path(r'candidate/(?P<idd>.*)',views.candidate,name='candidate'),
     path('candidate_search',views.candidate_search,name='candidate_search'),
+    path('studentlist', views.studentlist,name='studentlist'),
 ]

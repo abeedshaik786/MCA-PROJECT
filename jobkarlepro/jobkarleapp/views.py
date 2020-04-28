@@ -376,4 +376,10 @@ def candidate_search(request):
     temp = User.objects.filter(username__icontains=username)
     return render(request,'candidates_list.html',{'temp':temp})
 
+def studentlist(request):
+    students_list = User.objects.filter(is_staff = False)
+    # students_pic = ProfileImg.objects.all()
+    # import pdb;pdb.set_trace()
+    return render(request,'studentslist.html',{'students_list':students_list})
+
  
