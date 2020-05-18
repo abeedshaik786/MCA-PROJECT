@@ -15,13 +15,13 @@
   border: solid, 1px, black;
 }
 .nav-imgset{
-    background-image: linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3)) , url("/static/78.jpg");
-    color: white;
-    widows:100%;
-    background-size: cover;
-    background-position: bottom;
-    background-repeat: repeat-y;
-    height:500px; 
+  background-image:linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3)) , url("/static/78.jpg");
+  color: white;
+  widows:100%;
+  background-size: cover;
+  background-position: bottom;
+  background-repeat: repeat-y;
+  height:500px; 
 
 }
 .navbar-text-color a{
@@ -197,3 +197,4 @@
 .dropdown-users:hover .dropdown-user {display: block;
   margin-right: 100px;
 }
+

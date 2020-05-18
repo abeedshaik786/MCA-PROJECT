@@ -44,7 +44,7 @@
       <div class="container">
         <div class="content-center">
           <div class="cc-profile-image"><a href="#"><img src="{{user_img.Profile.url}}" alt="Image"/></a></div>
-          <div class="h2 title">{{user_data.username}}</div>
+          <div class="h2 title">{{Suser_data.username}}</div>
           <p class="category text-white">Web Developer, Graphic Designer,  Photographer</p><a class="btn btn-primary smooth-scroll mr-2" href="#contact" data-aos="zoom-in" data-aos-anchor="data-aos-anchor">Hire Me</a><a class="btn btn-primary" href="#" data-aos="zoom-in" data-aos-anchor="data-aos-anchor">Download CV</a>
         </div>
       </div>
@@ -158,6 +158,38 @@
   </div>
 </div>
 </div>
+<section class="">
+  <div class="card m-2" style="width: 850px; position:relative; left:580px;">
+    <div>
+      <div class="card col-sm-3 m-3" style="background-color: yellow;">        
+        <strong><div class="row"><mark  style="background-color: black; color:white; text-align:center;">SEND Your</mark><mark style="background-color: yellow; color:black;">INTENTION</mark></div></<strong>
+    </div>
+    </div>
+    <form method="POST" action="{% url 'jobkarleapp:User_intenction' %}">
+      {% csrf_token %}
+      <input type="hidden" name="user_id" value="{{user_data.id}}">
+      <input type="hidden" name="user_idd" value="{{Suser_data.id}}">
+    <div class="m-2">
+      <label style="color:rgb(129, 200, 248);">Your Name</label>
+      {{forms.Name}}
+    </div>
+    <div class="m-2">
+      <label style="color:rgb(129, 200, 248);">Subject</label>
+      {{forms.Subject}}
+    </div>
+    <div class="mr-2" style="position: relative; left:13px;">
+      <label class="mr-1" style="color:rgb(129, 200, 248);">Message</label>
+      {{forms.media}}
+      {{forms.Message|safe}}
+      
+    </div>
+    <div class="m-2 ">
+      <input class="p-2"  style="position:relative; left:320px;color:white; background-color:rgb(129, 200, 248);" type="submit" value="Send Notification">
+    </div>
+  </form>
+
+  </div>
+</section>
     </div>
     <footer class="footer">
       <div class="container text-center"><a class="cc-facebook btn btn-link" href="#"><i class="fa fa-facebook fa-2x " aria-hidden="true"></i></a><a class="cc-twitter btn btn-link " href="#"><i class="fa fa-twitter fa-2x " aria-hidden="true"></i></a><a class="cc-google-plus btn btn-link" href="#"><i class="fa fa-google-plus fa-2x" aria-hidden="true"></i></a><a class="cc-instagram btn btn-link" href="#"><i class="fa fa-instagram fa-2x " aria-hidden="true"></i></a></div>

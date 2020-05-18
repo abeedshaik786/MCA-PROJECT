@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
-from .forms import  FresherModel,FresherDataModel,FresherQualificationModel,Qualification_Course,JobRequirmentsModel,ProfileImgModel
-from .models import FresherQualification,JobRequirments,FresherData
+from .forms import  FresherModel,FresherDataModel,FresherQualificationModel,Qualification_Course,JobRequirmentsModel,ProfileImgModel,NotificationModel
+from .models import FresherQualification,JobRequirments,FresherData,Notifications
 from django.core.files.storage import FileSystemStorage
 from .functions import handle_uploaded_file
 from .models import Fresher,FresherData,JobRequirments,ProfileImg,Qualification
@@ -28,6 +28,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.urls import reverse
 from django.contrib import messages
+from django.db.models import Count
 
 
 @requires_csrf_token
@@ -103,14 +104,26 @@ def ProfileData(request,User_id):
     student_jobs = JobRequirments.objects.all()
     # import pdb;pdb.set_trace()
     user_personal_data = FresherData.objects.get(user_id=user_data.id)
+    user_qualification = FresherQualification.objects.get(user_id=user_data.id)
+    # import pdb; pdb.set_trace()
+    forms = FresherQualificationModel()
     profilepic = ProfileImg.objects.get(user_id=user_data.id)
+    notifications=Notifications.objects.filter(user_id = user_data.id)
+    notification_count=Notifications.objects.filter(Status = 'Unread',user_id = user_data.id).count()
+    notification_unread=Notifications.objects.filter(user_id = user_data.id,Status = 'Unread')
+    notification_read=Notifications.objects.filter(Status = 'Read')
     return render(request,'userpage.html',{
         'user_data':user_data,
         'student_jobs':student_jobs,
         'user_personal_data':user_personal_data,
         'profilepic':profilepic,
-
-    })
+        'user_qualification':user_qualification,
+        'forms':forms,
+        'notifications':notifications,
+        'notification_count':notification_count,
+        'notification_unread':notification_unread, 
+        'notification_read':notification_read, })
+    
 def Companyprofile_data(request,User_id):
     user_data = User.objects.get(id=User_id)
     user_personal_data = FresherData.objects.get(user_id = user_data.id)
@@ -168,7 +181,7 @@ def Login(request):
 def Logout(request):
     logout(request)
     return HttpResponseRedirect('FresherRigister')
-def mulltisearch(request):
+def mulltisearch(request,idd):
     if request.method == "GET":
 
         Role = request.GET.get('role')
@@ -176,10 +189,31 @@ def mulltisearch(request):
         Experiance = request.GET.get('experiance')
         Salary = request.GET.get('salary')
         # sys.setrecursionlimit(10**6)
-        filter_data = JobRequirments.objects.filter(Q(Interview_Location__iexact = Location) | Q(Skills__iexact = Role) ).order_by()
+        student_jobs = JobRequirments.objects.filter(Q(Interview_Location__iexact = Location) | Q(Skills__iexact = Role) ).order_by()
         # sys.setrecursionlimit(10**6)
         # import pdb;pdb.set_trace()
-        return render(request,'multifilter.html',{'filter_data':filter_data})
+        user_data = User.objects.get(id=idd)
+        # import pdb;pdb.set_trace()
+        user_personal_data = FresherData.objects.get(user_id=user_data.id)
+        user_qualification = FresherQualification.objects.get(user_id=user_data.id)
+        # import pdb; pdb.set_trace()
+        forms = FresherQualificationModel()
+        profilepic = ProfileImg.objects.get(user_id=user_data.id)
+        notifications=Notifications.objects.filter(user_id = user_data.id)
+        notification_count=Notifications.objects.filter(Status = 'Unread',user_id = user_data.id).count()
+        notification_unread=Notifications.objects.filter(user_id = user_data.id,Status = 'Unread')
+        notification_read=Notifications.objects.filter(Status = 'Read')
+        return render(request,'userpage.html',{
+        'user_data':user_data,
+        'student_jobs':student_jobs,
+        'user_personal_data':user_personal_data,
+        'profilepic':profilepic,
+        'user_qualification':user_qualification,
+        'forms':forms,
+        'notifications':notifications,
+        'notification_count':notification_count,
+        'notification_unread':notification_unread, 
+        'notification_read':notification_read, })
 def FreshExtradata(request):
      if request.method == "POST":
             # import pdb;pdb.set_trace()
@@ -324,6 +358,7 @@ def Apply_Click(request,idd):
     user_id= request.POST.get('user_id')
     user_data = User.objects.get(fresherqualification__id=data.id)
     student_jobs = JobRequirments.objects.all()
+    user_qualification = FresherQualification.objects.get(user_id=user_data.id)
     user_personal_data = FresherData.objects.get(user_id=user_data.id)
     profilepic = ProfileImg.objects.get(user_id=user_data.id)
     obj = JobRequirments.objects.get(id=job)
@@ -341,11 +376,14 @@ def Apply_Click(request,idd):
         'student_jobs':student_jobs,
         'user_personal_data':user_personal_data,
         'profilepic':profilepic,
-        'obj':obj
+        'obj':obj,
+        'user_qualification':user_qualification,
         
     })
     
-def Applied_Candidates(request,idd):
+def Applied_Candidates(request,idd ,uidd):
+    # import pdb;pdb.set_trace()
+    user_data = User.objects.get(id = uidd)
     candidates=FresherQualification.objects.filter(jobrequirments__id=idd)
     temp =[]
     for p in candidates:
@@ -356,19 +394,23 @@ def Applied_Candidates(request,idd):
     print(temp)
     # messages.info(request,{'candidates':candidates})
     # return render(request,'companypage.html',{'candidates':candidates})
-    return render(request,'candidates_list.html',{'candidates':candidates,'temp':temp,})
-def candidate(request,idd):
-    user_data = User.objects.get(id=idd)
-    user_img = ProfileImg.objects.get(user__id=user_data.id)
-    course_data = FresherQualification.objects.get(user__id=user_data.id)
-    extra_data = FresherData.objects.get(user__id=user_data.id)
+    return render(request,'candidates_list.html',{'candidates':candidates,'temp':temp,'user_data':user_data})
+def candidate(request,idd,uidd):
+    Suser_data = User.objects.get(id=idd)
+    user_data = User.objects.get(id = uidd)
+    user_img = ProfileImg.objects.get(user__id=Suser_data.id)
+    course_data = FresherQualification.objects.get(user__id=Suser_data.id)
+    extra_data = FresherData.objects.get(user__id=Suser_data.id)
     dump = 50
+    forms = NotificationModel()
     return render(request,'candidate.html',{
     'user_data':user_data,
+    'Suser_data':Suser_data,
     'user_img':user_img,
     'course_data':course_data,
     'extra_data':extra_data,
     'dump':dump,
+    'forms':forms,
     
     })
 def candidate_search(request):
@@ -381,5 +423,79 @@ def studentlist(request):
     # students_pic = ProfileImg.objects.all()
     # import pdb;pdb.set_trace()
     return render(request,'studentslist.html',{'students_list':students_list})
+    
+def Resume_Edite(request):
+    import pdb;pdb.set_trace()
+    if request.method == "GET":
+        qualification_id = request.POST.get('qualification_id')
+        obj = FresherQualification.objects.get(id = qualification_id )
+        forms = FresherQualificationModel(request.POST,request.FILES,instance=obj)
+        if forms.is_valid():
+            forms.save()
+        import pdb;pdb.set_trace()
+        pass
+def User_intenction(request):
+    if request.method == "POST":
+        name = request.POST.get('Name')
+        subject = request.POST.get('Subject')
+        message = request.POST.get('Message')
+        user_id = request.POST.get('user_idd')
+        cuser_id = request.POST.get('user_id')
+        user_data = User.objects.get(id = user_id)
+        company_user_data = User.objects.get(id = cuser_id)
+        img = ProfileImg.objects.get(user_id = company_user_data.id)
+        # import pdb;pdb.set_trace()
+        obj = Notifications()
+        obj.Name = name
+        obj.Subject = subject
+        obj.Message = message
+        obj.Status ="Unread"
+        obj.user = user_data
+        obj.sender = company_user_data.id
+        obj.Profile = img.Profile
+        obj.save()
+        return HttpResponseRedirect(reverse('jobkarleapp:intenction', args=[user_data.id , company_user_data.id]))
+    
+def intenction(request,sUser_id ,User_id):
+    # import pdb;pdb.set_trace()
+    Suser_data = User.objects.get(id = sUser_id)
+    user_data = User.objects.get(id = User_id)
+    user_img = ProfileImg.objects.get(user__id=Suser_data.id)
+    course_data = FresherQualification.objects.get(user__id=Suser_data.id)
+    extra_data = FresherData.objects.get(user__id=Suser_data.id)
+    dump = Notifications.objects.all()
+    forms = NotificationModel()
+    return render(request,'candidate.html',{'Suser_data':Suser_data,
+    'user_data':user_data,
+    'user_img':user_img,
+    'course_data':course_data,
+    'extra_data':extra_data,
+    'dump':dump,
+    'forms':forms,})
+def notification_read(request,idd,uidd):
+    # import pdb;pdb.set_trace()
+    variable1= Notifications.objects.get(id = idd)
+    variable1.Status = 'Read'
+    variable1.save()
+    variable2 = User.objects.get(id = uidd)
+    company_user = User.objects.get(id = variable1.sender)
+    Img = ProfileImg.objects.get(user_id = company_user.id)
+    # import pdb;pdb.set_trace()
+    notifications=Notifications.objects.filter(user_id = variable2.id)
+    notification_count=Notifications.objects.filter(Status = 'Unread',user_id = variable2.id).count()
+    notification_unread=Notifications.objects.filter(user_id = variable2.id,Status = 'Unread')
+    notification_read=Notifications.objects.filter(Status = 'Read')
+    forms = NotificationModel()
+    # import pdb;pdb.set_trace() 
+    return render(request,'notification_view.html',{'obj':variable1,
+    'variable2':variable2,
+    'forms':forms,
+    'company_user':company_user,
+    'Img':Img,
+    'notifications':notifications,
+    'notification_count':notification_count,
+    'notification_unread':notification_unread,
+    'notification_read':notification_read,
+    })
 
  

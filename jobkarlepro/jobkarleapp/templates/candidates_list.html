@@ -178,7 +178,7 @@
           <h3><i class="fa fa-users" aria-hidden="true"></i><strong> Applied Canidate</strong></h3>
           <div class="row">
             {% for d in temp %}
-            <a href="{% url 'jobkarlepro:candidate' d.id %}">
+            <a href="{% url 'jobkarlepro:candidate' d.id user_data.id %}">
             <div class="card m-5" >
               <h5 class="title"><strong>{{d.username}}</strong></h5><br>
               <div class="bar">

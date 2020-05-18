@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
+from django.conf import settings
+from ckeditor.fields import RichTextField
+
 # Create your models here.
 TITLE_CHOICES = [
     ('male', 'Male.'),
@@ -84,6 +87,10 @@ Range =[
 dummy=[
      ('0','0'),
  ]
+status = [
+    ('Read','Read'),
+    ('Unread','Unread'),
+]
 # class User(AbstractUser):
 #     is_student = models.BooleanField(default=False)
 #     is_teacher = models.BooleanField(default=False)
@@ -163,6 +170,17 @@ class JobRequirments(models.Model):
             ordering = ['CompanyName']
     def __str__(self):
         return self.CompanyName
+class Notifications(models.Model):
+    Status = models.CharField(choices=status,max_length=100,blank=True,null=True)
+    Name = models.CharField(max_length=100,blank=True,null=True)
+    Subject = models.CharField(max_length=100,blank=True,null=True)
+    Message = RichTextField(max_length=10000,blank=True,null=True)
+    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True )
+    sender = models.CharField(max_length=100,blank=True,null=True)
+    Profile = models.FileField(upload_to='profile',null= True)
+
+    def __str__(self):
+        return self.Name
 
 # creating chatting process for this application
 

@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm,Textarea
-from .models import Fresher,FresherData,FresherQualification,Qualification_Course,JobRequirments,ProfileImg
+from .models import Fresher,FresherData,FresherQualification,Qualification_Course,JobRequirments,ProfileImg,Notifications
 from django.contrib.auth.models import User
 
 class FresherModel(forms.ModelForm):
@@ -67,3 +67,12 @@ class JobRequirmentsModel(forms.ModelForm):
         widgets = {
                 'Company_Description': Textarea(attrs={'cols':80 ,'rows':5}),
                 'Roles_and_Responsabulity': Textarea(attrs={'cols':80 ,'rows':5})}
+class NotificationModel(forms.ModelForm):
+    def __init__(self,*args, **kwargs):
+        super(NotificationModel,self).__init__(*args,**kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs["class"] = "form-control"
+            self.fields[field].widget.attrs["placeholder"] = field
+    class Meta:
+        model = Notifications
+        exclude = ['Status','user']

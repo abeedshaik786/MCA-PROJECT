@@ -218,10 +218,12 @@ img {
                     <g stroke="none" stroke-width="0" clip-path="url(#scene)">
                        
                       <g id="head">
-                        {% for i in candidate.profileimg_set.all %}
+                        {% for j in i.Status.user_set.all %}
+                        {% for i in j.profileimg_set.all %}
                         
                       <img src="{{i.Profile.url}}" class="rounded-circle img-responsive" style="margin-top:75px; margin-left:25px;" width="100" height="100">
                       
+                      {% endfor %}
                       {% endfor %}
                       </g>
                       <g id="shirt">
@@ -230,18 +232,28 @@ img {
                     </g>
                   </svg>
                 </div>
+                <i class="fa fa-graduation-cap" aria-hidden="true"></i>
                 <div class="more-info">
                   <h1>{{candidate.username}}</h1>
                   <div class="coords">
                     <span>Joined {{candidate.date_joined}}</span>
                   </div><br>
                   <div class="coords">
-                    <span>City, Country</span>
+                    <span class="row">
+                      <span class="m-1"><i class="fa fa-envelope"></i></span>
+                      <span class="m-1">{{candidate.email}}</span>
+                    </span>
+                  </div>
+                  <div class="coords">
+                    <span class="row">
+                      <span class="m-1"><i class="fa fa-graduation-cap" aria-hidden="true"></i></span>
+                      <span class="m-1">{{candidate.email}}</span>
+                    </span>
                   </div>
                   <div class="stats">
                     <div>
                       <div class="title">Awards</div>
-                      <i class="fa fa-trophy"></i>
+                      <i class="fa fa-globe"></i>
                       <div class="value">2</div>
                     </div>
                     <div>
